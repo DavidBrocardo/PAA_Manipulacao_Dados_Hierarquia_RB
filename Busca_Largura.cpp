@@ -5,70 +5,47 @@
 
 // Recursive C++ program for level order traversal of Binary Tree
 #include <iostream>
+#include <queue>
 #include <vector>
 using namespace std;
 
-class Node {
-public:
-    int data;
-    Node *left, *right;
+int buscarBFS(vector<int> &preOrdem, int valorProcurado) {
+    int comparacoes = 0;
+    queue<int> fila;
 
-    // Constructor to initialize a new node
-    Node(int value) {
-        data = value;
-        left = nullptr;
-        right = nullptr;
+    // Colocando os elementos da pré-ordem na fila
+    for (int i = 0; i < preOrdem.size(); ++i) {
+        fila.push(preOrdem[i]);
     }
-};
 
-// Helper function for recursive level order traversal
-void levelOrderRec(Node* root, int level, vector<vector<int>>& res) {
-      // Base case: If node is null, return
-    if (root == nullptr) return; 
+    // Realizando a busca na fila (BFS)
+    while (!fila.empty()) {
+        comparacoes++;  // Contando a comparação
+        int elemento = fila.front();
+        fila.pop();
 
-    // Add a new level to the result if needed
-    if (res.size() <= level) 
-        res.push_back({});
-  
-    // Add current node's data to its corresponding level
-    res[level].push_back(root->data);
+        if (elemento == valorProcurado) {
+            cout << "Elemento " << valorProcurado << " encontrado!" << endl;
+            return comparacoes;
+        }
+    }
 
-    // Recur for left and right children
-    levelOrderRec(root->left, level + 1, res);
-    levelOrderRec(root->right, level + 1, res);
-}
-
-// Function to perform level order traversal
-vector<vector<int>> levelOrder(Node* root) {
-      // Stores the result level by level
-    vector<vector<int>> res; 
-  
-    levelOrderRec(root, 0, res);
-    return res;
+    cout << "Elemento " << valorProcurado << " não encontrado!" << endl;
+    return comparacoes;
 }
 
 int main() {
-    // Create binary tree
-      //      1         
-    //     / \       
-    //    3   2      
-    //          \   
-    //           4 
-    //          /  \
-    //         6    5
-    Node* root = new Node(1);
-    root->left = new Node(3);
-    root->right = new Node(2);
-    root->right->right = new Node(4);
-    root->right->right->left = new Node(6);
-      root->right->right->right = new Node(5);
-    
-    // Perform level order traversal
-    vector<vector<int>> res = levelOrder(root);
+    // Pré-ordem já dada da árvore
+    vector<int> preOrdem = {14, 11, 6, 12, 20, 17, 25, 30, 37, 40};
 
-    // Print the result
-    for (vector<int> level : res) 
-        for (int data : level)
-            cout << data << " ";
+    // Valor a ser procurado
+    int valorProcurado = 37;
+
+    // Chamar a busca em largura (BFS)
+    int comparacoes = buscarBFS(preOrdem, valorProcurado);
+
+    // Exibir o número de comparações feitas
+    cout << "Quantidade de comparações feitas na busca BFS: " << comparacoes << endl;
+
+    return 0;
 }
-
